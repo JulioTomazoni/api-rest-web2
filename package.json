@@ -1,0 +1,24 @@
+{
+  "name": "api-rest-web2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/JulioTomazoni/api-rest-web2.git",
+  "author": "julio-tomazoni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JulioTomazoni/api-rest-web2/issues"
+  },
+  "homepage": "https://github.com/JulioTomazoni/api-rest-web2#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.3"
+  }
+}
