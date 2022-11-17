@@ -1,5 +1,7 @@
 import { server } from './server/server';
+import 'dotenv/config';
 
 
-
-server.listen(3000, () => console.log('Server Online'));
+server.listen(process.env.PORT, () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT}`);
+});
