@@ -3,5 +3,7 @@ yarn-error.log
 package-lock.json
 
 /build
+/coverage
+/tests
 
 .env
