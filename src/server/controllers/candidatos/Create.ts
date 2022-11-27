@@ -1,24 +1,20 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
-
 import { validation } from '../../shared/middlewares';
+import { ICandidato } from '../../database/models';
 
-interface ICandidato {
-  nome: string;
-  partido: string;
-  cargo: string;
-}
+interface IBodyProps extends Omit<ICandidato, 'id'> {}
 
 export const createValidation = validation((getSchema) => ({
-  body: getSchema<ICandidato>(yup.object().shape({
+  body: getSchema<IBodyProps>(yup.object().shape({
     nome: yup.string().required().min(3),
     partido: yup.string().required().max(6),
     cargo: yup.string().required(),
   })),
 }));
 
-export const create = async (req: Request<{}, {}, ICandidato>, res: Response) => {
+export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
 
   console.log(req.body);
 

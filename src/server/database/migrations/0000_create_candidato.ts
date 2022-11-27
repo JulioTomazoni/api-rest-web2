@@ -19,7 +19,9 @@ export async function up(knex: Knex){
 }
 
 export async function down(knex: Knex){
-  return knex.schema.dropTable(ETableNames.candidato)    
+  return knex
+    .schema
+    .dropTable(ETableNames.candidato)    
     .then(() => {
       console.log(`# Dropped table ${ETableNames.candidato}`);
     });

@@ -1,18 +1,14 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
-
 import { validation } from '../../shared/middlewares';
-
+import { ICandidato } from '../../database/models';
 
 interface IParamProps {
   id?: number;
 }
-interface IBodyProps {
-  nome: string;
-  partido: string;
-  cargo: string;
-}
+interface IBodyProps extends Omit<ICandidato, 'id'> {}
+
 export const updateByIdValidation = validation(getSchema => ({
   body: getSchema<IBodyProps>(yup.object().shape({
     nome: yup.string().required().min(3),
