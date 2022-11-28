@@ -3,10 +3,13 @@ import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middlewares';
 import { ICandidato } from '../../database/models';
+import { Knex } from '../../database/knex';
+import { ETableNames } from '../../database/ETableNames';
 
 interface IParamProps {
   id?: number;
 }
+
 interface IBodyProps extends Omit<ICandidato, 'id'> {}
 
 export const updateByIdValidation = validation(getSchema => ({
@@ -28,5 +31,31 @@ export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res:
     }
   });
 
-  return res.status(StatusCodes.NO_CONTENT).send();
+  const select = Knex(ETableNames.candidato).where('id', req.params.id);
+  const update = Knex(ETableNames.candidato).where('id', req.params.id).update({
+    nome: req.body.nome,
+    partido: req.body.partido,
+    cargo: req.body.cargo
+  });
+
+  console.log(select.toString());
+  console.log(update.toString());
+
+  update.then((data) => {
+    console.log(data);
+
+    select.then((data) => {
+      console.log(data);
+    }).catch((e) => {
+      console.log(e.message);
+    });
+    return res.status(StatusCodes.OK).send('Candidato ' +req.params.id?.toString() +' editado!');
+  }).catch((e) => {
+    console.log(e.message);
+    return res.status(StatusCodes.BAD_REQUEST).send('ERRO:' + e.message);
+  });
+  // .finally(() => {
+  //   Knex.destroy();
+  // });
+
 };

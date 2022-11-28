@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
-
 import { validation } from '../../shared/middlewares';
+import { Knex } from '../../database/knex';
+import { ETableNames } from '../../database/ETableNames';
 
 
 interface IParamProps {
@@ -22,10 +23,19 @@ export const getById = async (req: Request<IParamProps>, res: Response) => {
     }
   });
 
-  return res.status(StatusCodes.OK).json({
-    id: req.params.id,
-    nome: 'Paulo',
-    partido: 'PMDB',
-    cargo: 'Governador'
+  const select = Knex(ETableNames.candidato).select('*')
+    .where('id', req.params.id);
+
+  console.log(select.toString());
+
+  select.then(dados => {
+    console.log(dados);
+    return res.status(StatusCodes.OK).json(dados);
+  }).catch(e => {
+    console.log('ERRO:', e.message);
+    return res.status(StatusCodes.BAD_REQUEST).send('ERRO:' + e.message);
   });
+  // .finally(() => {
+  //   Knex.destroy();
+  // });
 };

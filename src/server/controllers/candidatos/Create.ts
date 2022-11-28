@@ -3,6 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middlewares';
 import { ICandidato } from '../../database/models';
+import { Knex } from '../../database/knex';
+import { ETableNames } from '../../database/ETableNames';
+
 
 interface IBodyProps extends Omit<ICandidato, 'id'> {}
 
@@ -15,8 +18,25 @@ export const createValidation = validation((getSchema) => ({
 }));
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
+  const data = [
+    req.body,
+  ];
+  
+  const insert = Knex(ETableNames.candidato).insert(data);
 
-  console.log(req.body);
+  console.log(insert.toString());
+  console.log(insert.toSQL().toNative());
 
-  return res.status(StatusCodes.CREATED).send('Não implementado');
+  insert.then(data => {
+    console.log(data);
+    return res.status(StatusCodes.CREATED).send('Registro inserido com sucesso!');    
+  }).catch(e => {
+    console.log('ERRO:', e.message);
+    return res.status(StatusCodes.BAD_REQUEST).send('ERRO:' + e.message);
+  });
+  // .finally(() => {
+  //   Knex.destroy();
+  // }); 
+
+  
 };
