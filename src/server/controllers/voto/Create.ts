@@ -2,19 +2,19 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middlewares';
-import { ICandidato } from '../../database/models';
+import { IVoto } from '../../database/models';
 import { Knex } from '../../database/knex';
 import { ETableNames } from '../../database/ETableNames';
 
 
-interface IBodyProps extends Omit<ICandidato, 'id'> {}
+interface IBodyProps extends Omit<IVoto, 'id'> {}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(yup.object().shape({
-    nome: yup.string().required().min(3),
-    partido: yup.string().required().max(6),
-    cargo: yup.string().required(),
-  })),
+    cpf: yup.string().required().max(11).min(11),
+    sexo: yup.string().required().max(1),
+    idCandidato: yup.number().integer().required(),
+  }))
 }));
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
@@ -22,7 +22,7 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
     req.body,
   ];
   
-  const insert = Knex(ETableNames.candidato).insert(data);
+  const insert = Knex(ETableNames.voto).insert(data);
 
   console.log(insert.toString());
   console.log(insert.toSQL().toNative());
@@ -34,7 +34,5 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
     console.log('ERRO:', e.message);
     return res.status(StatusCodes.BAD_REQUEST).send('ERRO:' + e.message);
   });
-  // .finally(() => {
-  //   Knex.destroy();
-  // });  
+
 };
